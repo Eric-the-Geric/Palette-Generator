@@ -1,49 +1,50 @@
-from PIL import Image
-import matplotlib.pyplot as plt
-import numpy as np
-import seaborn as sns
+import argparse
+from colour_extractor import colour_palette
+
 def main():
-    image = Image.open("./anime.png", "r")
-    pixel_values = list(image.getdata())
-    pixel_set = set(pixel_values)
+    parser = argparse.ArgumentParser(description='pull color palette from bg and pass to i3')
+    parser.add_argument('-p', '--palette',
+                        help='file to get the colour palette',
+                        type=str
+                        )
+    parser.add_argument('-n', '--integer',
+                        help='how many colours you want to extract',
+                        type=int,
+                        )
+    parser.add_argument('-i', '--i3',
+                        help='path to the i3 config',
+                        type=str
+                        )
+    args = parser.parse_args()
+    #print(args.string)
+    #with args.file as file:
+        #file.writelines(["testing123\n", args.string+"\n"])
 
-    pixel_freq: dict[tuple:int] = {tup:0 for tup in pixel_set}
+    new_text = colour_palette(path=args.palette, n_values=args.integer)
+    i3_path = args.i3
+    start_mark = "#>>>>>colours>>>>>\n"
+    end_mark =  "#<<<<<colours<<<<<"
+
+    new_text = start_mark + new_text + end_mark 
+
+    with open(i3_path, 'r') as  file:
+        content = file.read()
+
+    start_index = content.find(start_mark)
+    end_index = content.find(end_mark, start_index)
+    if start_index != -1 and end_index != -1:
+        content = content[:start_index]+"\n" + new_text + content[end_index + len(end_mark):]
+
+    # Write the modified content back to the file
+    with open(i3_path, 'w') as file:
+        file.write(content)
 
 
 
-    for pixel in pixel_values:
-        pixel_freq[pixel]+=1
 
 
 
-    sorted_list = sorted(pixel_freq.items(), key = lambda x: x[1], reverse=True)
-    most_frequent = sorted_list[-4:]
 
-    
-
-    colours = [pix for pix, count in most_frequent]
-    brightness = [((t[0]+t[1]+t[2])/3, i) for i, t in enumerate(colours)]
-    sorted_brightness = sorted(brightness, key=lambda x: x[0])
-    sorted_colours = [colours[i] for b, i in sorted_brightness]
-    
-    #print(most_frequent_pixels)
-    #colours = []
-    #for i in range(9):
-    #    if i%2 == 0:
-    #        colours.append(most_frequent_pixels[i])
-    #print(colours)
-
-    pixel_freq.clear()
-    
-    for key, value in sorted_list:
-        pixel_freq[key] = value
-
-
-    palette = np.array(sorted_colours)[np.newaxis, :, :]
-    plt.imshow(palette)
-    plt.axis('off')
-    #plt.show()
-    plt.savefig('test.png')
-
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
+
