@@ -33,15 +33,11 @@ def main():
     start_index = content.find(start_mark)
     end_index = content.find(end_mark, start_index)
     if start_index != -1 and end_index != -1:
-        content = content[:start_index]+"\n" + new_text + content[end_index + len(end_mark):]
+        content = content[:start_index] + new_text + content[end_index + len(end_mark):]
 
     # Write the modified content back to the file
     with open(i3_path, 'w') as file:
         file.write(content)
-
-
-
-
 
 
 
