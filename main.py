@@ -1,5 +1,6 @@
 import argparse
 from colour_extractor import colour_palette
+from testing.clustering import kmeans_clustering_algorithm
 
 def main():
     parser = argparse.ArgumentParser(description='pull color palette from bg and pass to i3')
@@ -20,7 +21,8 @@ def main():
     #with args.file as file:
         #file.writelines(["testing123\n", args.string+"\n"])
 
-    new_text = colour_palette(path=args.palette, n_values=args.integer)
+    #new_text = colour_palette(path=args.palette, n_values=args.integer)
+    new_text = kmeans_clustering_algorithm(args.palette, args.integer)
     i3_path = args.i3
     start_mark = "#>>>>>colours>>>>>\n"
     end_mark =  "#<<<<<colours<<<<<"
