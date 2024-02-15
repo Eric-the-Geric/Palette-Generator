@@ -41,6 +41,14 @@ def kmeans_clustering_algorithm(path, n_values):
     most_frequent_hex_n = [rgb_to_hex(p) for p in sorted_centroids_normal]
     most_frequent_hex_b = [rgb_to_hex(p) for p in sorted_centroids_bright]
 
+    polybar_colours = ["background =",
+                        "background-alt =",
+                        "disabled=",
+                        "primary =",
+                        "secondary =",
+                        "alert =",
+                        "foreground ="]
+
     alacritty_colours = [
                         "black =", #0, 0, 0
                         "blue =", #0,0, 255
@@ -73,10 +81,17 @@ def kmeans_clustering_algorithm(path, n_values):
     con_b = "[colors.bright]\n" + con_b
 
     con_alac = con_n + "\n" + con_b
+    
+    new_config_pb = [s+" " +m+ "\n" for s, m in zip(polybar_colours, most_frequent_hex_n)]
+    con_pb = "".join(new_config_pb)
+    con_pb = "[colors]\n" + con_pb
     configuration_updates = {"i3":
                              {"config": coni3},
                              "alacritty": 
-                             {"config": con_alac}}
+                             {"config": con_alac},
+                             "polybar":
+                              {"config": con_pb},
+                              }
     return configuration_updates
 
 
