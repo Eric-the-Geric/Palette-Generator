@@ -60,17 +60,17 @@ def kmeans_clustering_algorithm(path, n_values):
                         "white ="] # 255, 255, 255
 
     list_of_variables = [
-            "set $bg",
+            "set $blue",
             "set $gray",
             "set $darkgray",
+            "set $purple",
             "set $red",
             "set $yellow",
-            "set $purple",
-            "set $blue",
             "set $green",
+            "set $bg",
             "set $aqua",
             ]
-    new_config_i3 = [s+ " " + m + "\n" for s, m in zip(list_of_variables, most_frequent_hex_n)]
+    new_config_i3 = [s+ " " + m + "\n" for s, m in zip(list_of_variables, most_frequent_hex_b)]
     coni3 = "".join(new_config_i3)
 
     new_config_n = [s+ " " + f'"{m}"'.replace("#","0x") + "\n" for s, m in zip(alacritty_colours, most_frequent_hex_n)]
